@@ -26,4 +26,5 @@
 * .NET 8.0, ASP.NET Core MVC, Razor Views  
 * Entity Framework Core 9 + Npgsql provider  
 * Bootstrap 5 
-* PostgreSQL  
+* PostgreSQL
+* Visual Studio IDE 2022
