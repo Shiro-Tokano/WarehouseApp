@@ -1,0 +1,15 @@
+﻿@model WarehouseApp.Models.Resource
+@{
+    ViewData["Title"] = "Новый ресурс";
+}
+<h2>Создать ресурс</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-success">Сохранить</button>
+    <a asp-action="Index" class="btn btn-secondary">Отмена</a>
+</form>

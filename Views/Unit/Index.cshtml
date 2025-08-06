@@ -1,0 +1,38 @@
+﻿@model IEnumerable<WarehouseApp.Models.Unit>
+@{
+    ViewData["Title"] = "Справочник единиц измерения";
+}
+<h2>Единицы измерения</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+<p>
+    <a asp-action="Create" class="btn btn-primary">Добавить единицу</a>
+</p>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Наименование</th>
+            <th>Статус</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var u in Model)
+        {
+            <tr>
+                <td>@u.Name</td>
+                <td>@(u.IsArchived ? "Архив" : "Активный")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@u.Id" class="btn btn-sm btn-secondary">Редактировать</a>
+                    <form asp-action="Delete" asp-route-id="@u.Id" method="post" style="display:inline-block"
+                          onsubmit="return confirm('Удалить единицу измерения @u.Name?');">
+                        <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

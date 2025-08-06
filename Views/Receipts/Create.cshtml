@@ -1,0 +1,121 @@
+﻿@model WarehouseApp.Controllers.ReceiptEditViewModel
+@{
+    ViewData["Title"] = "Новый документ поступления";
+}
+<h2>Создать документ поступления</h2>
+
+<form asp-action="Create" method="post">
+
+    <div class="mb-3">
+        <label asp-for="Number" class="form-label">Номер</label>
+        <input asp-for="Number" class="form-control" />
+        <span asp-validation-for="Number" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Date" class="form-label">Дата</label>
+        <input asp-for="Date" class="form-control" type="date" />
+    </div>
+    <h4>Ресурсы в документе:</h4>
+    <table class="table" id="itemsTable">
+        <thead>
+            <tr>
+                <th>Ресурс</th>
+                <th>Ед. изм.</th>
+                <th>Количество</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Items.Count; i++)
+            {
+                <tr>
+                    <td>
+                        <select asp-for="Items[@i].ResourceId" class="form-select" asp-items="ViewBag.ResourcesList">
+                            <option value="0">-- выберите ресурс --</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select asp-for="Items[@i].UnitId" class="form-select" asp-items="ViewBag.UnitsList">
+                            <option value="0">-- выберите единицу --</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input asp-for="Items[@i].Quantity" asp-format="{0:0}" class="form-control" />
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-sm remove-item">×</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <p>
+        <button type="button" id="addItemBtn" class="btn btn-outline-primary">Добавить строку</button>
+    </p>
+    <button type="submit" class="btn btn-success">Сохранить</button>
+    <a asp-action="Index" class="btn btn-secondary">Отмена</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Скрипт для динамического добавления/удаления строк ресурса
+        let itemsTable = document.getElementById('itemsTable');
+        let addItemBtn = document.getElementById('addItemBtn');
+        addItemBtn.addEventListener('click', function() {
+            addNewItemRow();
+        });
+        itemsTable.addEventListener('click', function(e) {
+            if (e.target && e.target.classList.contains('remove-item')) {
+                e.target.closest('tr').remove();
+                renumberRows();
+            }
+        });
+        function addNewItemRow() {
+            let rowCount = itemsTable.querySelectorAll('tbody tr').length;
+            // Формирование новой строки таблицы с полями ввода
+            let newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>
+                    <select name="Items[${rowCount}].ResourceId" class="form-select">
+                        <option value="0">-- выберите ресурс --</option>
+        @foreach (var res in (IEnumerable<SelectListItem>)ViewBag.ResourcesList)
+        {
+                                <option value="@res.Value">@res.Text</option>
+        }
+                    </select>
+                </td>
+                <td>
+                    <select name="Items[${rowCount}].UnitId" class="form-select">
+                        <option value="0">-- выберите единицу --</option>
+        @foreach (var u in (IEnumerable<SelectListItem>)ViewBag.UnitsList)
+        {
+                                <option value="@u.Value">@u.Text</option>
+        }
+                    </select>
+                </td>
+                <td>
+                    <input name="Items[${rowCount}].Quantity" class="form-control" type="number" step="0.01" />
+                </td>
+                <td>
+                    <button type="button" class="btn btn-danger btn-sm remove-item">×</button>
+                </td>
+            `;
+            itemsTable.querySelector('tbody').appendChild(newRow);
+        }
+        function renumberRows() {
+            let rows = itemsTable.querySelectorAll('tbody tr');
+            // Обновляем индексы name=Items[index]... для каждой строки
+            rows.forEach((row, index) => {
+                row.querySelectorAll('select, input').forEach(input => {
+                    if (input.name.includes('ResourceId'))
+                        input.name = `Items[${index}].ResourceId`;
+                    else if (input.name.includes('UnitId'))
+                        input.name = `Items[${index}].UnitId`;
+                    else if (input.name.includes('Quantity'))
+                        input.name = `Items[${index}].Quantity`;
+                });
+            });
+        }
+    </script>
+}

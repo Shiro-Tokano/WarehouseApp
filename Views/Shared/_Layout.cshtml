@@ -1,0 +1,81 @@
+﻿@using Microsoft.AspNetCore.Mvc.Rendering
+@inject Microsoft.AspNetCore.Mvc.Rendering.IHtmlHelper<dynamic> HtmlHelper
+@{
+    string ctrl = (ViewContext.RouteData.Values["controller"]?.ToString() ?? "").ToLower();
+    string IsActive(string c) => ctrl == c.ToLower() ? "active" : "";
+    var appTitle = "Склад";
+    var pageTitle = ViewData["Title"] as string;
+}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@(string.IsNullOrWhiteSpace(pageTitle) ? appTitle : pageTitle + " — " + appTitle)</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WarehouseApp.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="border-bottom">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-semibold" asp-area="" asp-controller="Receipts" asp-action="Index">Склад</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNavbar"
+                        aria-controls="topNavbar" aria-expanded="false" aria-label="Переключить навигацию">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="topNavbar">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link @IsActive("receipts")" asp-controller="Receipts" asp-action="Index">Поступления</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @IsActive("warehouse")" asp-controller="Warehouse" asp-action="Index">Склад</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @IsActive("resource")" asp-controller="Resource" asp-action="Index">Ресурсы</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @IsActive("unit")" asp-controller="Unit" asp-action="Index">Единицы</a>
+                        </li>
+                    </ul>
+                    <span class="navbar-text small text-muted d-none d-lg-inline">
+                        @DateTime.Now.ToString("dd.MM.yyyy")
+                    </span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container my-3">
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>
+        }
+        @RenderSection("Breadcrumbs", required: false)
+
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="footer border-top py-3">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="small text-muted">
+                &copy; @DateTime.Now.Year — @appTitle
+            </div>
+            <div class="small">
+                <a class="link-secondary" asp-controller="Receipts" asp-action="Index">Главная</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

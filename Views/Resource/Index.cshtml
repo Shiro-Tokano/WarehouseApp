@@ -1,0 +1,38 @@
+﻿@model IEnumerable<WarehouseApp.Models.Resource>
+@{
+    ViewData["Title"] = "Справочник ресурсов";
+}
+<h2>Ресурсы</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+<p>
+    <a asp-action="Create" class="btn btn-primary">Добавить ресурс</a>
+</p>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Наименование</th>
+            <th>Статус</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var res in Model)
+        {
+            <tr>
+                <td>@res.Name</td>
+                <td>@(res.IsArchived ? "Архив" : "Активный")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@res.Id" class="btn btn-sm btn-secondary">Редактировать</a>
+                    <form asp-action="Delete" asp-route-id="@res.Id" method="post" style="display:inline-block"
+                          onsubmit="return confirm('Удалить ресурс @res.Name?');">
+                        <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

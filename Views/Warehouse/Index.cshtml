@@ -1,0 +1,49 @@
+﻿@model IEnumerable<WarehouseApp.Models.ReceiptItem>
+@{
+    ViewData["Title"] = "Список поступлений (ресурсы)";
+}
+<h2>Все поступившие ресурсы</h2>
+
+<div class="card p-3 mb-3">
+    <form method="get" class="row g-3">
+        <div class="col-auto">
+            <label>Ресурсы:</label>
+            <select name="selectedResourceIds" multiple class="form-select" size="4" asp-items="ViewBag.ResourcesList"></select>
+        </div>
+        <div class="col-auto">
+            <label>Единицы изм.:</label>
+            <select name="selectedUnitIds" multiple class="form-select" size="4" asp-items="ViewBag.UnitsList"></select>
+        </div>
+        <div class="col-auto align-self-end">
+            <button type="submit" class="btn btn-primary">Фильтровать</button>
+            <a asp-action="Index" class="btn btn-secondary">Сбросить</a>
+        </div>
+    </form>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Ресурс</th>
+            <th>Ед. изм.</th>
+            <th>Количество</th>
+            <th>Документ</th>
+            <th>Дата</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Resource.Name</td>
+                <td>@item.Unit.Name</td>
+                <td>@item.Quantity</td>
+                <td>
+                    <!-- Ссылка на документ поступления -->
+                    <a asp-controller="Receipts" asp-action="Edit" asp-route-id="@item.ReceiptDocumentId">@item.ReceiptDocument.Number</a>
+                </td>
+                <td>@item.ReceiptDocument.Date.ToString("dd.MM.yyyy")</td>
+            </tr>
+        }
+    </tbody>
+</table>

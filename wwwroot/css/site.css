@@ -1,0 +1,76 @@
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-select:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 .2rem rgba(13,110,253,.25);
+}
+
+main {
+    padding-top: .5rem;
+}
+
+.card .form-label {
+    font-weight: 600;
+}
+
+.card .form-select[multiple], .card select[multiple] {
+    min-width: 220px;
+    min-height: 140px;
+}
+
+.table th {
+    white-space: nowrap;
+}
+
+.table td, .table th {
+    vertical-align: middle;
+}
+
+.table .btn {
+    margin-right: .25rem;
+}
+
+
+.badge-archived {
+    background-color: #6c757d;
+}
+
+
+.text-danger.field-validation-error {
+    font-size: .875rem;
+}
+
+.validation-summary-errors {
+    color: #dc3545;
+}
+
+
+.navbar .nav-link.active {
+    font-weight: 600;
+    color: #0d6efd !important;
+}
+
+
+.w-150 {
+    width: 150px;
+}
+
+.w-200 {
+    width: 200px;
+}
